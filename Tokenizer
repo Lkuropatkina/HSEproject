@@ -62,7 +62,7 @@ def token(a):
             break
     return answer
 
-a = input()
+formula = input()
 
-answ = token(a)
+answ = token(formula)
 print(answ)

@@ -1,0 +1,68 @@
+digits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'}
+operations = {'+', '-', '*', '/', '^'}
+function = {'sin', 'cos', 'tg', 'ctg', 'arcsin', 'arccos', 'arctg', 'arcctg', 'ln'}
+symbols = {'(', ')', '{', '}', '[', ']'}
+
+def ifDigit(formula, index):
+    nowNumb = formula[index]
+    index += 1
+    while (index < len(formula)):
+        if (formula[index] in digits or formula[index] == '.'):
+            nowNumb += formula[index]
+            index += 1
+        else:
+            break
+    index -= 1
+    if (nowNumb[-1] == '.'):
+        return ("error", index)
+    return (nowNumb, index)
+
+def word(formula, index):
+    if (formula[index] == 'e'):
+        return (formula[index], index)
+    if (index < len(formula) - 1):
+        if (formula[index : index + 2] in function or formula[index : index + 2] == "pi"):
+            return (formula[index : index + 2], index + 1)
+    if (index < len(formula) - 2):
+        if (formula[index : index + 3] in function):
+            return (formula[index : index + 3], index + 2)
+    if (index < len(formula) - 4):
+        if (formula[index : index + 5] in function):
+            return (formula[index : index + 5], index + 4)
+    if (index < len(formula) - 5):
+        if (formula[index : index + 6] in function):
+            return (formula[index : index + 6], index + 5)
+    return("error", len(a))
+
+def token(a):
+    answer = []
+    print(len(a))
+    index = 0
+    for i in range(0, len(a)):
+        if (a[index] in digits): #если появляется цифра, ты пытаемся считать число
+            (nowNumb, index) = ifDigit(a, index)
+            answer.append(nowNumb)
+        elif (a[index] == '-' and len(answer) == 0): #если унарный минус в начале формулы
+            (nowNumb, index) = ifDigit(a, index)
+            answer.append(nowNumb)
+        elif (a[index] == '-' and answer[-1] in {'(', '[', '{'}):
+            (nowNumb, index) = ifDigit(a, index)
+            answer.append(nowNumb)
+        elif (a[index] in operations or a[index] in symbols): #если скобка или операция
+            answer.append(a[index])
+        elif (a[index] == '\\'): #если появляется константа с backslach
+            index += 1
+            (nowNumb, index) = word(a, index)
+            answer.append(nowNumb)
+        else:
+            (nowNumb, index) = word(a, index)
+            answer.append(nowNumb)
+        index += 1
+        if (index > len(a) - 1):
+            break
+    return answer
+
+a = input()
+
+answ = token(a)
+print(answ)

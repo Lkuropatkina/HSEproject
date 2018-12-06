@@ -34,19 +34,36 @@ def word(formula, index):
             return (formula[index : index + 6], index + 5)
     return("error", len(a))
 
-def token(a):
+def minus(formula, index):
+    if (index + 1 == len(a)):
+        return (error, len(formula))
+    elif (a[index + 1] in digits):
+        (nowNumb, index) = ifDigit(a, index)
+        return(nowNumb, index)
+    elif (a[index + 1] in {'(', '[', '{'}):
+        index += 1
+        return("-" + a[index], index)
+    elif (a[index + 1] == '\\'):
+        index += 2
+        (nowNumb, index) = word(a, index)
+        return("-" + nowNumb, index)
+    else:
+        index += 1
+        (nowNumb, index) = word(a, index)
+        return("-" + nowNumb, index)
+
+def myFunc(a):
     answer = []
-    print(len(a))
     index = 0
     for i in range(0, len(a)):
         if (a[index] in digits): #если появляется цифра, ты пытаемся считать число
             (nowNumb, index) = ifDigit(a, index)
             answer.append(nowNumb)
         elif (a[index] == '-' and len(answer) == 0): #если унарный минус в начале формулы
-            (nowNumb, index) = ifDigit(a, index)
+            (nowNumb, index) = minus(a, index)
             answer.append(nowNumb)
-        elif (a[index] == '-' and answer[-1] in {'(', '[', '{'}):
-            (nowNumb, index) = ifDigit(a, index)
+        elif (a[index] == '-' and (answer[-1] in {'(', '[', '{'} or answer[-1] in function)):
+            (nowNumb, index) = minus(a, index)
             answer.append(nowNumb)
         elif (a[index] in operations or a[index] in symbols): #если скобка или операция
             answer.append(a[index])
@@ -62,7 +79,7 @@ def token(a):
             break
     return answer
 
-formula = input()
+a = input()
 
-answ = token(formula)
+answ = myFunc(a)
 print(answ)

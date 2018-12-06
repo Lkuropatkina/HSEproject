@@ -1,19 +1,22 @@
 digits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'}
 operations = {'+', '-', '*', '/', '^'}
-function = {'sin', 'cos', 'tg', 'ctg', 'arcsin', 'arccos', 'arctg', 'arcctg', 'ln'}
+function = {'sin', 'cos', 'tg', 'ctg', 'arcsin', 'arccos', 'arctg', 'arcctg', 'ln', 'arctan', 'tan', 'sh', 'ch'}
 symbols = {'(', ')', '{', '}', '[', ']'}
 
 def ifDigit(formula, index):
     nowNumb = formula[index]
+    number = 0
     index += 1
     while (index < len(formula)):
-        if (formula[index] in digits or formula[index] == '.'):
+        if (formula[index] in digits or formula[index] == '.' or formula[index] == ','):
             nowNumb += formula[index]
             index += 1
+            if (formula[index - 1] == '.' or  formula[index - 1] == ','):
+                number += 1
         else:
             break
     index -= 1
-    if (nowNumb[-1] == '.'):
+    if (nowNumb[-1] == '.' or nowNumb[-1] == ',' or number > 1):
         return ("error", index)
     return (nowNumb, index)
 

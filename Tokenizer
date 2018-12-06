@@ -1,5 +1,5 @@
 digits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'}
-operations = {'+', '-', '*', '/', '^', '_'}
+operations = {'+', '-', '*', '/', '^', '_', '|'}
 function = {'sin', 'cos', 'tg', 'ctg', 'arcsin', 'arccos', 'arctg', 'arcctg', 'ln', 'arctan', 'tan', 'sh', 'ch', 'log'}
 symbols = {'(', ')', '{', '}', '[', ']'}
 
@@ -74,8 +74,6 @@ def myFunc(a):
             index += 1
             (nowNumb, index) = word(a, index)
             answer.append(nowNumb)
-        elif (a[index] == '|'):
-            answer.append(a[index])
         else:
             (nowNumb, index) = word(a, index)
             answer.append(nowNumb)

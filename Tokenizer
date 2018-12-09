@@ -1,6 +1,6 @@
 digits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'}
 operations = {'+', '-', '*', '/', '^', '_', '|'}
-function = {'sin', 'cos', 'tg', 'ctg', 'arcsin', 'arccos', 'arctg', 'arcctg', 'ln', 'arctan', 'tan', 'sh', 'ch', 'log'}
+function = {'sin', 'cos', 'tg', 'ctg', 'arcsin', 'arccos', 'arctg', 'arcctg', 'ln', 'arctan', 'tan', 'sh', 'ch', 'log', 'lg'}
 symbols = {'(', ')', '{', '}', '[', ']'}
 
 def ifDigit(formula, index):
@@ -60,6 +60,9 @@ def myFunc(a):
     index = 0
     for i in range(0, len(a)):
         if (a[index] in digits): #если появляется цифра, ты пытаемся считать число
+            if (index > 0):
+                if (answer[-1] in {'}', ']', ')', 'pi', 'e', '-pi', '-e'}):
+                    answer.append('*');
             (nowNumb, index) = ifDigit(a, index)
             answer.append(nowNumb)
         elif (a[index] == '-' and len(answer) == 0): #если унарный минус в начале формулы
@@ -69,15 +72,30 @@ def myFunc(a):
             (nowNumb, index) = minus(a, index)
             answer.append(nowNumb)
         elif (a[index] in operations or a[index] in symbols): #если скобка или операция
+            if (index > 0 and a[index] in {'(', '{', '['}):
+                if (answer[-1] in {'}', ']', ')', 'pi', 'e', '-pi', '-e'} or answer[-1][-1] in digits):
+                    answer.append('*')
             answer.append(a[index])
         elif (a[index] == '\\'): #если появляется константа с backslach
+            if (index > 0):
+                if (answer[-1] in {'}', ']', ')', 'pi', 'e', '-pi', '-e'} or answer[-1][-1] in digits):
+                    answer.append('*')
             index += 1
             (nowNumb, index) = word(a, index)
             answer.append(nowNumb)
         else:
+            if (index > 0):
+                if (answer[-1] in {'}', ']', ')', 'pi', 'e', '-pi', '-e'} or answer[-1][-1] in digits):
+                    answer.append('*')
             (nowNumb, index) = word(a, index)
             answer.append(nowNumb)
         index += 1
+        if (answer[-1] == 'log'):
+            answer[-1] = 'lg'
+        elif (answer[-1] == 'tan'):
+            answer[-1] = 'tg'
+        elif (answer[-1] == 'arctan'):
+            answer[-1] = 'arctg'
         if (index > len(a) - 1):
             break
     return answer

@@ -9,7 +9,8 @@ import math
 class ExampleLexer(sly.Lexer):
     # a set of tokes we spit out
     tokens = { NUMBER, ANDE, E, PI, ANDPI, SIN, COS, TG, TAN, CTG, CTAN,
-               ARCSIN, ASIN, ARCCOS, ACOS, ARCTG, ARCTAN, ATG, ATAN, ARCCTG, ARCCTAN, ACTG, ACTAN}
+               ARCSIN, ASIN, ARCCOS, ACOS, ARCTG, ARCTAN, ATG, ATAN, ARCCTG, ARCCTAN, ACTG, ACTAN,
+               LOG, LG, SH, CH}
 
     # these are also tokens, but they don't have state and take up exactly one
     # symbol, so it's more convinient this way. Otherwise this is completely
@@ -51,6 +52,10 @@ class ExampleLexer(sly.Lexer):
     ARCCTAN = 'arcctan'
     ACTG = 'actg'
     ACTAN = 'actan'
+    SH = 'sh'
+    CH = 'ch'
+    LOG = 'log'
+    LG = 'lg'
 
     # this is a definition of a token, also a regex, we must provide one for every token in `tokens` set.
     #
@@ -259,6 +264,39 @@ class ArcctgNode(ASTNode):
         return f'arcctg({self.l})'
 
 
+class ShNode(ASTNode):
+    def __init__(self, l):
+        self.l = l;
+
+    def compute(self):
+        return math.sinh(self.l.compute());
+
+    def __str__(self):
+        return f'sh({self.l})'
+
+
+class ChNode(ASTNode):
+    def __init__(self, l):
+        self.l = l;
+
+    def compute(self):
+        return math.cosh(self.l.compute());
+
+    def __str__(self):
+        return f'ch({self.l})'
+
+
+class LogNode(ASTNode):
+    def __init__(self, l):
+        self.l = l;
+
+    def compute(self):
+        return math.log(self.l.compute());
+
+    def __str__(self):
+        return f'log({self.l})'
+
+
 class ExampleParser(sly.Parser):
     # this means that
     # a + b + c
@@ -404,6 +442,22 @@ class ExampleParser(sly.Parser):
     @_('ACTAN "(" expr ")"')
     def expr(self, p):
         return ArcctgNode(p.expr)
+
+    @_('SH "(" expr ")"')
+    def expr(self, p):
+        return ShNode(p.expr)
+
+    @_('CH "(" expr ")"')
+    def expr(self, p):
+        return ChNode(p.expr)
+
+    @_('LOG "(" expr ")"')
+    def expr(self, p):
+        return LogNode(p.expr)
+
+    @_('LG "(" expr ")"')
+    def expr(self, p):
+        return LogNode(p.expr)
 
 
 

@@ -8,8 +8,8 @@ import math
 
 class ExampleLexer(sly.Lexer):
     # a set of tokes we spit out
-    tokens = { NUMBER, ANDE, E, PI, ANDPI, SIN, COS, TG, TAN, CTG, CTAN,
-               ARCSIN, ASIN, ARCCOS, ACOS, ARCTG, ARCTAN, ATG, ATAN, ARCCTG, ARCCTAN, ACTG, ACTAN,
+    tokens = { NUMBER, ANDE, E, PI, ANDPI, SIN, COS, TG, TAN, CTG, CTAN, COT,
+               ARCSIN, ASIN, ARCCOS, ACOS, ARCTG, ARCTAN, ATG, ATAN, ARCCTG, ARCCTAN, ACTG, ACTAN, ARCCOT, ARCCOTAN,
                LOG, LG, SH, CH}
 
     # these are also tokens, but they don't have state and take up exactly one
@@ -40,6 +40,7 @@ class ExampleLexer(sly.Lexer):
     TAN = 'tan'
     CTG = 'ctg'
     CTAN = 'ctan'
+    COT = 'cot'
     ARCSIN = 'arcsin'
     ASIN = 'asin'
     ARCCOS = 'arccos'
@@ -49,9 +50,10 @@ class ExampleLexer(sly.Lexer):
     ATG = 'atg'
     ATAN = 'atan'
     ARCCTG = 'arcctg'
-    ARCCTAN = 'arcctan'
     ACTG = 'actg'
     ACTAN = 'actan'
+    ARCCOT = 'arccot'
+    ARCCOTAN = 'arccotan'
     SH = 'sh'
     CH = 'ch'
     LOG = 'log'
@@ -393,6 +395,9 @@ class ExampleParser(sly.Parser):
     def expr(self, p):
         return CtgNode(p.expr)
 
+    @_('COT "(" expr ")"')
+    def expr(self, p):
+        return CtgNode(p.expr)
 
     @_('ARCSIN "(" expr ")"')
     def expr(self, p):
@@ -416,8 +421,7 @@ class ExampleParser(sly.Parser):
 
     @_('ARCCTAN "(" expr ")"')
     def expr(self, p):
-        return ArcctgNode(p.expr)
-
+        return ArctgNode(p.expr)
 
     @_('ASIN "(" expr ")"')
     def expr(self, p):
@@ -440,6 +444,14 @@ class ExampleParser(sly.Parser):
         return ArcctgNode(p.expr)
 
     @_('ACTAN "(" expr ")"')
+    def expr(self, p):
+        return ArcctgNode(p.expr)
+
+    @_('ARCCOT "(" expr ")"')
+    def expr(self, p):
+        return ArcctgNode(p.expr)
+
+    @_('ARCCOTAN "(" expr ")"')
     def expr(self, p):
         return ArcctgNode(p.expr)
 

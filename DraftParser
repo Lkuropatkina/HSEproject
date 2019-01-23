@@ -10,12 +10,12 @@ class ExampleLexer(sly.Lexer):
     # a set of tokes we spit out
     tokens = { NUMBER, ANDE, E, PI, ANDPI, SIN, COS, TG, TAN, CTG, CTAN, COT,
                ARCSIN, ASIN, ARCCOS, ACOS, ARCTG, ARCTAN, ATG, ATAN, ARCCTG, ARCCTAN, ACTG, ACTAN, ARCCOT, ARCCOTAN,
-               LOG, LG, SH, CH}
+               LOG, LG, SH, CH, SQRT}
 
     # these are also tokens, but they don't have state and take up exactly one
     # symbol, so it's more convinient this way. Otherwise this is completely
     # equivalent to defining PLUS, LPAREN, RPAREN.
-    literals = { '+', '-', '*', '/', '(', ')', '{', '}', '[', ']'}
+    literals = { '+', '-', '*', '/', '^', '(', ')', '{', '}', '[', ']'}
 
     # ignore any of these symbols
     ignore = ' \r\t\n'
@@ -58,6 +58,7 @@ class ExampleLexer(sly.Lexer):
     CH = 'ch'
     LOG = 'log'
     LG = 'lg'
+    SQRT = 'sqrt'
 
     # this is a definition of a token, also a regex, we must provide one for every token in `tokens` set.
     #
@@ -102,23 +103,21 @@ class NumNode(ASTNode):
 
 class ENode(ASTNode):
     def __init__(self, e):
-        self.n = math.e;
+        self.n = math.e
 
-    # we alredy know this node's numeric value
     def compute(self):
-        return math.e;
+        return math.e
 
-    # to convert it to text, we just return the number as text
     def __str__(self):
         return "e"
 
 class PiNode(ASTNode):
     def __init__(self, e):
-        self.n = math.pi;
+        self.n = math.pi
 
     # we alredy know this node's numeric value
     def compute(self):
-        return math.pi;
+        return math.pi
 
     # to convert it to text, we just return the number as text
     def __str__(self):
@@ -178,12 +177,35 @@ class DivNode(ASTNode):
         return f'({self.l})/({self.r})'
 
 
-class SinNode(ASTNode):
-    def __init__(self, l):
-        self.l = l;
+class PowNode(ASTNode):
+    def __init__(self, l, r):
+        self.l = l
+        self.r = r
 
     def compute(self):
-        return math.sin(self.l.compute());
+        return math.pow(self.l.compute(), self.r.compute())
+
+    def __str__(self):
+        return f'({self.l})^({self.r})'
+
+
+class SqrtNode(ASTNode):
+    def __init__(self, l):
+        self.l = l
+
+    def compute(self):
+        return math.sqrt(self.l.compute())
+
+    def __str__(self):
+        return f'sqrt({self.l})'
+
+
+class SinNode(ASTNode):
+    def __init__(self, l):
+        self.l = l
+
+    def compute(self):
+        return math.sin(self.l.compute())
 
     def __str__(self):
         return f'sin({self.l})'
@@ -191,10 +213,10 @@ class SinNode(ASTNode):
 
 class CosNode(ASTNode):
     def __init__(self, l):
-        self.l = l;
+        self.l = l
 
     def compute(self):
-        return math.cos(self.l.compute());
+        return math.cos(self.l.compute())
 
     def __str__(self):
         return f'cos({self.l})'
@@ -202,10 +224,10 @@ class CosNode(ASTNode):
 
 class TgNode(ASTNode):
     def __init__(self, l):
-        self.l = l;
+        self.l = l
 
     def compute(self):
-        return math.tan(self.l.compute());
+        return math.tan(self.l.compute())
 
     def __str__(self):
         return f'tg({self.l})'
@@ -213,10 +235,10 @@ class TgNode(ASTNode):
 
 class CtgNode(ASTNode):
     def __init__(self, l):
-        self.l = l;
+        self.l = l
 
     def compute(self):
-        return math.tan(math.pi / 2 - self.l.compute());
+        return math.tan(math.pi / 2 - self.l.compute())
 
     def __str__(self):
         return f'ctg({self.l})'
@@ -224,10 +246,10 @@ class CtgNode(ASTNode):
 
 class ArcsinNode(ASTNode):
     def __init__(self, l):
-        self.l = l;
+        self.l = l
 
     def compute(self):
-        return math.asin(self.l.compute());
+        return math.asin(self.l.compute())
 
     def __str__(self):
         return f'arcsin({self.l})'
@@ -235,10 +257,10 @@ class ArcsinNode(ASTNode):
 
 class ArccosNode(ASTNode):
     def __init__(self, l):
-        self.l = l;
+        self.l = l
 
     def compute(self):
-        return math.acos(self.l.compute());
+        return math.acos(self.l.compute())
 
     def __str__(self):
         return f'arccos({self.l})'
@@ -246,10 +268,10 @@ class ArccosNode(ASTNode):
 
 class ArctgNode(ASTNode):
     def __init__(self, l):
-        self.l = l;
+        self.l = l
 
     def compute(self):
-        return math.atan(self.l.compute());
+        return math.atan(self.l.compute())
 
     def __str__(self):
         return f'arctg({self.l})'
@@ -257,10 +279,10 @@ class ArctgNode(ASTNode):
 
 class ArcctgNode(ASTNode):
     def __init__(self, l):
-        self.l = l;
+        self.l = l
 
     def compute(self):
-        return math.pi / 2 - math.atan(self.l.compute());
+        return math.pi / 2 - math.atan(self.l.compute())
 
     def __str__(self):
         return f'arcctg({self.l})'
@@ -268,10 +290,10 @@ class ArcctgNode(ASTNode):
 
 class ShNode(ASTNode):
     def __init__(self, l):
-        self.l = l;
+        self.l = l
 
     def compute(self):
-        return math.sinh(self.l.compute());
+        return math.sinh(self.l.compute())
 
     def __str__(self):
         return f'sh({self.l})'
@@ -279,10 +301,10 @@ class ShNode(ASTNode):
 
 class ChNode(ASTNode):
     def __init__(self, l):
-        self.l = l;
+        self.l = l
 
     def compute(self):
-        return math.cosh(self.l.compute());
+        return math.cosh(self.l.compute())
 
     def __str__(self):
         return f'ch({self.l})'
@@ -290,10 +312,10 @@ class ChNode(ASTNode):
 
 class LogNode(ASTNode):
     def __init__(self, l):
-        self.l = l;
+        self.l = l
 
     def compute(self):
-        return math.log(self.l.compute());
+        return math.log(self.l.compute())
 
     def __str__(self):
         return f'log({self.l})'
@@ -312,6 +334,8 @@ class ExampleParser(sly.Parser):
         ('left', '+', '-'),
         ('left', '*', '/'),
         ('right', 'UMINUS'),
+        ('right', 'SIN', 'COS'),  #!!!!!!!!!!!!and others pls someone put trig here
+        ('left', '^', 'SQRT'),
     )
     # declare that we use tokens from the ExampleLexer
     tokens = ExampleLexer.tokens
@@ -371,103 +395,111 @@ class ExampleParser(sly.Parser):
     def expr(self, p):
         return DivNode(p.expr0, p.expr1)
 
-    @_('SIN "(" expr ")"')
+    @_('expr "^" expr')
+    def expr(self, p):
+        return PowNode(p.expr0, p.expr1)
+
+    @_('SQRT expr')
+    def expr(self, p):
+        return SqrtNode(p.expr)
+
+    @_('SIN expr')
     def expr(self, p):
         return SinNode(p.expr)
 
-    @_('COS "(" expr ")"')
+    @_('COS expr')
     def expr(self, p):
         return CosNode(p.expr)
 
-    @_('TG "(" expr ")"')
+    @_('TG  expr')
     def expr(self, p):
         return TgNode(p.expr)
 
-    @_('TAN "(" expr ")"')
+    @_('TAN expr')
     def expr(self, p):
         return TgNode(p.expr)
 
-    @_('CTG "(" expr ")"')
+    @_('CTG expr')
     def expr(self, p):
         return CtgNode(p.expr)
 
-    @_('CTAN "(" expr ")"')
+    @_('CTAN  expr')
     def expr(self, p):
         return CtgNode(p.expr)
 
-    @_('COT "(" expr ")"')
+    @_('COT expr')
     def expr(self, p):
         return CtgNode(p.expr)
 
-    @_('ARCSIN "(" expr ")"')
+    @_('ARCSIN expr')
     def expr(self, p):
         return ArcsinNode(p.expr)
 
-    @_('ARCCOS "(" expr ")"')
+    @_('ARCCOS expr')
     def expr(self, p):
         return ArccosNode(p.expr)
 
-    @_('ARCTG "(" expr ")"')
+    @_('ARCTG expr')
     def expr(self, p):
         return ArctgNode(p.expr)
 
-    @_('ARCTAN "(" expr ")"')
+    @_('ARCTAN expr')
     def expr(self, p):
         return ArctgNode(p.expr)
 
-    @_('ARCCTG "(" expr ")"')
+    @_('ARCCTG expr ')
     def expr(self, p):
         return ArcctgNode(p.expr)
 
-    @_('ARCCTAN "(" expr ")"')
+    @_('ARCCTAN expr')
     def expr(self, p):
         return ArctgNode(p.expr)
 
-    @_('ASIN "(" expr ")"')
+    @_('ASIN expr')
     def expr(self, p):
         return ArcsinNode(p.expr)
 
-    @_('ACOS "(" expr ")"')
+    @_('ACOS expr')
     def expr(self, p):
         return ArccosNode(p.expr)
 
-    @_('ATG "(" expr ")"')
+    @_('ATG expr')
     def expr(self, p):
         return ArctgNode(p.expr)
 
-    @_('ATAN "(" expr ")"')
+    @_('ATAN expr')
     def expr(self, p):
         return ArctgNode(p.expr)
 
-    @_('ACTG "(" expr ")"')
+    @_('ACTG expr')
     def expr(self, p):
         return ArcctgNode(p.expr)
 
-    @_('ACTAN "(" expr ")"')
+    @_('ACTAN expr')
     def expr(self, p):
         return ArcctgNode(p.expr)
 
-    @_('ARCCOT "(" expr ")"')
+    @_('ARCCOT expr')
     def expr(self, p):
         return ArcctgNode(p.expr)
 
-    @_('ARCCOTAN "(" expr ")"')
+    @_('ARCCOTAN expr')
     def expr(self, p):
         return ArcctgNode(p.expr)
 
-    @_('SH "(" expr ")"')
+    @_('SH expr')
     def expr(self, p):
         return ShNode(p.expr)
 
-    @_('CH "(" expr ")"')
+    @_('CH expr')
     def expr(self, p):
         return ChNode(p.expr)
 
-    @_('LOG "(" expr ")"')
+    @_('LOG expr')
     def expr(self, p):
         return LogNode(p.expr)
 
-    @_('LG "(" expr ")"')
+    @_('LG expr')
     def expr(self, p):
         return LogNode(p.expr)
 

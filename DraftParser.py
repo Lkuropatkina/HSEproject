@@ -8,7 +8,7 @@ import math
 
 class ExampleLexer(sly.Lexer):
     # a set of tokes we spit out
-    tokens = { NUMBER, ANDE, E, PI, ANDPI, SIN, COS, TG, TAN, CTG, CTAN, COT,
+    tokens = { NUMBER, E, PI, SIN, COS, TG, TAN, CTG, CTAN, COT,
                ARCSIN, ASIN, ARCCOS, ACOS, ARCTG, ARCTAN, ATG, ATAN, ARCCTG, ARCCTAN, ACTG, ACTAN, ARCCOT, ARCCOTAN,
                LOG, LG, SH, CH, SQRT}
 
@@ -30,10 +30,10 @@ class ExampleLexer(sly.Lexer):
     # and here https://docs.python.org/3/library/re.html
     ignore_comment = r'\#.*'
 
-    E = 'e'
-    ANDE = '\\\e'
-    PI = 'pi'
-    ANDPI = '\\\pi'
+    E = r'\\?e'
+#    ANDE = '\\\e'
+    PI = r'\\?pi'
+#    ANDPI = '\\\pi'
     SIN = 'sin'
     COS = 'cos'
     TG = 'tg'
@@ -101,8 +101,18 @@ class NumNode(ASTNode):
     def __str__(self):
         return str(self.n)
 
+class MinusNode(ASTNode):
+    def __init__(self, n):
+        self.n = n
+
+    def compute(self):
+        return (-1) * self.n.compute()
+
+    def __str__(self):
+        return "-" + str(self.n)
+
 class ENode(ASTNode):
-    def __init__(self, e):
+    def __init__(self):
         self.n = math.e
 
     def compute(self):
@@ -112,7 +122,7 @@ class ENode(ASTNode):
         return "e"
 
 class PiNode(ASTNode):
-    def __init__(self, e):
+    def __init__(self):
         self.n = math.pi
 
     # we alredy know this node's numeric value
@@ -345,21 +355,21 @@ class ExampleParser(sly.Parser):
     def expr(self, p):
         return NumNode(p.NUMBER)
 
-    @_('ANDE')
-    def expr(self, n):
-        return ENode(0)
+#    @_('ANDE')
+#    def expr(self, n):
+#        return ENode()
 
     @_('E')
     def expr(self, n):
-        return ENode(0)
+        return ENode()
 
     @_('PI')
     def expr(self, n):
-        return PiNode(0)
+        return PiNode()
 
-    @_('ANDPI')
-    def expr(self, n):
-        return PiNode(0)
+#    @_('ANDPI')
+#    def expr(self, n):
+#        return PiNode()
 
     # expression in parentheses in an expression
     @_('"(" expr ")"')
@@ -385,7 +395,7 @@ class ExampleParser(sly.Parser):
 
     @_('"-" expr %prec UMINUS')
     def expr(self, p):
-        return MultNode(NumNode(-1), p.expr)
+        return MinusNode(p.expr)
 
     @_('expr "*" expr')
     def expr(self, p):

@@ -330,6 +330,17 @@ class LogNode(ASTNode):
 
     def __str__(self):
         return f'log({self.l})'
+    
+class Log2Node(ASTNode):
+    def __init__(self, l, r):
+            self.l = l
+            self.r = r
+
+    def compute(self):
+        return math.log(self.l.compute(), self.r.compute())
+
+    def __str__(self):
+        return f'(log({self.l}, {self.r}))'
 
 
 class ExampleParser(sly.Parser):
@@ -459,6 +470,10 @@ class ExampleParser(sly.Parser):
     @_('LOG expr', 'LG expr', 'LN expr')
     def expr(self, p):
         return LogNode(p.expr)
+    
+    @_('LOG "(" expr "," expr ")" ')
+    def expr(self, p):
+        return Log2Node(p.expr0, p.expr1)
 
 
 

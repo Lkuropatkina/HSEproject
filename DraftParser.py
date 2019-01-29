@@ -347,7 +347,7 @@ class ExampleParser(sly.Parser):
         ('right', 'UMINUS'),
         ('right', 'SIN', 'COS', 'TG', 'TAN', 'CTG', 'CTAN', 'COT',
                'ARCSIN', 'ASIN', 'ARCCOS', 'ACOS', 'ARCTG', 'ARCTAN', 'ATG', 'ATAN', 'ARCCTG', 'ARCCTAN', 'ACTG', 'ACTAN',
-               'ARCCOT', 'ARCCOTAN', 'LOG', 'LG', 'LN', 'SH', 'CH', 'SQRT'),  #!!!!!!!!!!!!and others pls someone put trig here
+               'ARCCOT', 'ARCCOTAN', 'LOG', 'LG', 'LN', 'SH', 'CH', 'SQRT'),
         ('left', '^', 'SQRT'),
     )
     # declare that we use tokens from the ExampleLexer

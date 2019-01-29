@@ -359,7 +359,7 @@ class ExampleParser(sly.Parser):
         ('right', 'SIN', 'COS', 'TG', 'TAN', 'CTG', 'CTAN', 'COT',
                'ARCSIN', 'ASIN', 'ARCCOS', 'ACOS', 'ARCTG', 'ARCTAN', 'ATG', 'ATAN', 'ARCCTG', 'ARCCTAN', 'ACTG', 'ACTAN',
                'ARCCOT', 'ARCCOTAN', 'LOG', 'LG', 'LN', 'SH', 'CH', 'SQRT'),
-        ('left', '^', 'SQRT'),
+        ('left', '^'),
     )
     # declare that we use tokens from the ExampleLexer
     tokens = ExampleLexer.tokens

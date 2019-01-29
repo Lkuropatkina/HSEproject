@@ -10,7 +10,7 @@ class ExampleLexer(sly.Lexer):
     # a set of tokes we spit out
     tokens = { NUMBER, E, PI, SIN, COS, TG, TAN, CTG, CTAN, COT,
                ARCSIN, ASIN, ARCCOS, ACOS, ARCTG, ARCTAN, ATG, ATAN, ARCCTG, ARCCTAN, ACTG, ACTAN, ARCCOT, ARCCOTAN,
-               LOG, LG, SH, CH, SQRT}
+               LOG, LG, LN, SH, CH, SQRT}
 
     # these are also tokens, but they don't have state and take up exactly one
     # symbol, so it's more convinient this way. Otherwise this is completely
@@ -58,6 +58,7 @@ class ExampleLexer(sly.Lexer):
     CH = 'ch'
     LOG = 'log'
     LG = 'lg'
+    LN = 'ln'
     SQRT = 'sqrt'
 
     # this is a definition of a token, also a regex, we must provide one for every token in `tokens` set.
@@ -344,7 +345,9 @@ class ExampleParser(sly.Parser):
         ('left', '+', '-'),
         ('left', '*', '/'),
         ('right', 'UMINUS'),
-        ('right', 'SIN', 'COS'),  #!!!!!!!!!!!!and others pls someone put trig here
+        ('right', 'SIN', 'COS', 'TG', 'TAN', 'CTG', 'CTAN', 'COT',
+               'ARCSIN', 'ASIN', 'ARCCOS', 'ACOS', 'ARCTG', 'ARCTAN', 'ATG', 'ATAN', 'ARCCTG', 'ARCCTAN', 'ACTG', 'ACTAN',
+               'ARCCOT', 'ARCCOTAN', 'LOG', 'LG', 'LN', 'SH', 'CH', 'SQRT'),  #!!!!!!!!!!!!and others pls someone put trig here
         ('left', '^', 'SQRT'),
     )
     # declare that we use tokens from the ExampleLexer

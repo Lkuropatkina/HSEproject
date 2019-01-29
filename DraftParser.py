@@ -10,7 +10,7 @@ class ExampleLexer(sly.Lexer):
     # a set of tokes we spit out
     tokens = { NUMBER, E, PI, SIN, COS, TG, TAN, CTG, CTAN, COT,
                ARCSIN, ASIN, ARCCOS, ACOS, ARCTG, ARCTAN, ATG, ATAN, ARCCTG, ARCCTAN, ACTG, ACTAN, ARCCOT, ARCCOTAN,
-               LOG, LG, SH, CH, SQRT}
+               LOG, LG, LN, SH, CH, SQRT}
 
     # these are also tokens, but they don't have state and take up exactly one
     # symbol, so it's more convinient this way. Otherwise this is completely
@@ -58,6 +58,7 @@ class ExampleLexer(sly.Lexer):
     CH = 'ch'
     LOG = 'log'
     LG = 'lg'
+    LN = 'ln'
     SQRT = 'sqrt'
 
     # this is a definition of a token, also a regex, we must provide one for every token in `tokens` set.
@@ -344,7 +345,9 @@ class ExampleParser(sly.Parser):
         ('left', '+', '-'),
         ('left', '*', '/'),
         ('right', 'UMINUS'),
-        ('right', 'SIN', 'COS'),  #!!!!!!!!!!!!and others pls someone put trig here
+        ('right', 'SIN', 'COS', 'TG', 'TAN', 'CTG', 'CTAN', 'COT',
+               'ARCSIN', 'ASIN', 'ARCCOS', 'ACOS', 'ARCTG', 'ARCTAN', 'ATG', 'ATAN', 'ARCCTG', 'ARCCTAN', 'ACTG', 'ACTAN',
+               'ARCCOT', 'ARCCOTAN', 'LOG', 'LG', 'LN', 'SH', 'CH', 'SQRT'),  #!!!!!!!!!!!!and others pls someone put trig here
         ('left', '^', 'SQRT'),
     )
     # declare that we use tokens from the ExampleLexer
@@ -421,79 +424,27 @@ class ExampleParser(sly.Parser):
     def expr(self, p):
         return CosNode(p.expr)
 
-    @_('TG  expr')
+    @_('TG expr', 'TAN expr')
     def expr(self, p):
         return TgNode(p.expr)
 
-    @_('TAN expr')
-    def expr(self, p):
-        return TgNode(p.expr)
-
-    @_('CTG expr')
+    @_('CTG expr', 'CTAN expr', 'COT expr')
     def expr(self, p):
         return CtgNode(p.expr)
 
-    @_('CTAN  expr')
-    def expr(self, p):
-        return CtgNode(p.expr)
-
-    @_('COT expr')
-    def expr(self, p):
-        return CtgNode(p.expr)
-
-    @_('ARCSIN expr')
+    @_('ARCSIN expr', 'ASIN expr')
     def expr(self, p):
         return ArcsinNode(p.expr)
 
-    @_('ARCCOS expr')
+    @_('ARCCOS expr', 'ACOS expr')
     def expr(self, p):
         return ArccosNode(p.expr)
 
-    @_('ARCTG expr')
+    @_('ARCTG expr', 'ARCTAN expr', 'ATG expr', 'ATAN expr')
     def expr(self, p):
         return ArctgNode(p.expr)
-
-    @_('ARCTAN expr')
-    def expr(self, p):
-        return ArctgNode(p.expr)
-
-    @_('ARCCTG expr ')
-    def expr(self, p):
-        return ArcctgNode(p.expr)
-
-    @_('ARCCTAN expr')
-    def expr(self, p):
-        return ArctgNode(p.expr)
-
-    @_('ASIN expr')
-    def expr(self, p):
-        return ArcsinNode(p.expr)
-
-    @_('ACOS expr')
-    def expr(self, p):
-        return ArccosNode(p.expr)
-
-    @_('ATG expr')
-    def expr(self, p):
-        return ArctgNode(p.expr)
-
-    @_('ATAN expr')
-    def expr(self, p):
-        return ArctgNode(p.expr)
-
-    @_('ACTG expr')
-    def expr(self, p):
-        return ArcctgNode(p.expr)
-
-    @_('ACTAN expr')
-    def expr(self, p):
-        return ArcctgNode(p.expr)
-
-    @_('ARCCOT expr')
-    def expr(self, p):
-        return ArcctgNode(p.expr)
-
-    @_('ARCCOTAN expr')
+   
+    @_('ARCCTG expr', 'ARCCTAN expr', 'ACTG expr', 'ACTAN expr', 'ARCCOT expr', 'ARCCOTAN expr')
     def expr(self, p):
         return ArcctgNode(p.expr)
 
@@ -505,11 +456,7 @@ class ExampleParser(sly.Parser):
     def expr(self, p):
         return ChNode(p.expr)
 
-    @_('LOG expr')
-    def expr(self, p):
-        return LogNode(p.expr)
-
-    @_('LG expr')
+    @_('LOG expr', 'LG expr', 'LN expr')
     def expr(self, p):
         return LogNode(p.expr)
 

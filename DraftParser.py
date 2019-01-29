@@ -15,7 +15,7 @@ class ExampleLexer(sly.Lexer):
     # these are also tokens, but they don't have state and take up exactly one
     # symbol, so it's more convinient this way. Otherwise this is completely
     # equivalent to defining PLUS, LPAREN, RPAREN.
-    literals = { '+', '-', '*', '/', '^', '(', ')', '{', '}', '[', ']'}
+    literals = { '+', '-', '*', '/', '^', '(', ')', '{', '}', '[', ']', ','}
 
     # ignore any of these symbols
     ignore = ' \r\t\n'

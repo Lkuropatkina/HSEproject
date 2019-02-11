@@ -75,6 +75,11 @@ class ExampleLexer(sly.Lexer):
         t.value = float(t.value)
         return t
 
+    @_(r'[a-df-z_]')
+    def NAME(self, t):
+        t.value = 0 #(int)(t.value)
+        return t
+
 
 # base class for our tree
 # AST stands for Abstract Syntax Tree
@@ -88,6 +93,18 @@ class ASTNode(object):
     def __str__(self):
         raise NotImplementedError
 
+class VarNode(ASTNode):
+    def __init__(self, n):
+        self.n = n
+
+    def compute(self):
+        return 0
+
+    def __str__(self):
+        return str(self.n)
+
+
+        
 # this one represents a number
 class NumNode(ASTNode):
     # we just store a number in this type of AST node
@@ -372,6 +389,9 @@ class ExampleParser(sly.Parser):
 #    @_('ANDE')
 #    def expr(self, n):
 #        return ENode()
+    @_('NAME')
+    def expr(self, n):
+        return VarNode(n.NAME);
 
     @_('E')
     def expr(self, n):

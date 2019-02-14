@@ -487,9 +487,13 @@ class ExampleParser(sly.Parser):
     def expr(self, p):
         return ChNode(p.expr)
 
-    @_('LOG expr', 'LG expr', 'LN expr')
+    @_('LOG expr', 'LN expr')
     def expr(self, p):
         return LogNode(p.expr)
+    
+    @_('LG expr')
+    def expr(self, p):
+        return Log2Node(p.expr, 10)
     
     @_('LOG "(" expr "," expr ")" ')
     def expr(self, p):

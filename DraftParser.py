@@ -31,9 +31,7 @@ class ExampleLexer(sly.Lexer):
     ignore_comment = r'\#.*'
 
     E = r'\\?e'
-#    ANDE = '\\\e'
     PI = r'\\?pi'
-#    ANDPI = '\\\pi'
     SIN = 'sin'
     COS = 'cos'
     TG = 'tg'
@@ -386,9 +384,6 @@ class ExampleParser(sly.Parser):
     def expr(self, p):
         return NumNode(p.NUMBER)
 
-#    @_('ANDE')
-#    def expr(self, n):
-#        return ENode()
     @_('NAME')
     def expr(self, n):
         return VarNode(n.NAME);
@@ -400,10 +395,6 @@ class ExampleParser(sly.Parser):
     @_('PI')
     def expr(self, n):
         return PiNode()
-
-#    @_('ANDPI')
-#    def expr(self, n):
-#        return PiNode()
 
     # expression in parentheses in an expression
     @_('"(" expr ")"')

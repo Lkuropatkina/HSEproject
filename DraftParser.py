@@ -498,6 +498,9 @@ def parse(s):
     parser = ExampleParser()
     return parser.parse(lexer.tokenize(s))
 
+def answer(s):
+    result = parse(s)
+    return ("$" + str(result) + "$", result.compute())
 
 if __name__ == '__main__':
     while True:
